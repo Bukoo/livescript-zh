@@ -68,7 +68,17 @@ var x;
 
 你也可以在LiveScript中使用`const`来声明常量。常量检查会在LS编译成为JS时发生 - 跟JS引擎编译JS的时候一样。(参考：[How the V8 engine works?](http://thibaultlaurens.github.io/javascript/2013/04/29/how-the-v8-engine-works/), [理解JavaScript的编译过程与运行机制](http://blog.csdn.net/celte/article/details/39412683))
 
+要是编译下面的语句的话：
 
+*LiveScript*
+```livescript
+const x = 10
+x = 0
+```
 
+会得到结果：`redeclaration of constant "x" on line 2`。
 
+可是，如果是对象被声明为常量的话，你还是能修改他们的属性的。通过使用`-k`或者`--const`这两个命令行标识，你可以强制把所有变量编译成常量。
+
+## 操作符
 
