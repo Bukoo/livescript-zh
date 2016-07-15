@@ -1,6 +1,6 @@
 # 赋值
 
-LiveScript中的基本赋值方式跟你了解的应该是差不多的，比如：`variable = value`，但不需要有变量声明。跟CoffeeScript不一样的是，如果你想修改外层作用于的变量，你需要使用`:=`操作符。
+LiveScript中的基本赋值方式跟你了解的应该是差不多的，比如：`variable = value`，但不需要有变量声明。跟CoffeeScript不一样的是，如果你想修改外层作用域的变量，你需要使用`:=`操作符。
 
 *LiveScript*
 ```livescript
