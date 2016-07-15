@@ -6,12 +6,14 @@
 例如：(LiveScript是在上方，编译后的JavaScript是在下方)
 
 *LiveScript:*
+
 ```ls
 if 2 + 2 == 4
   do-something()
 ```
 
 *JavaScript:*
+
 ```js
 if (2 + 2 === 4) {
   doSomething();
@@ -23,11 +25,13 @@ if (2 + 2 === 4) {
 要使得代码更加简洁，你可以在调用函数的时候省略括号
 
 *LiveScript:*
+
 ```ls
 add 2,3
 ```
 
 *JavaScript:*
+
 ```js
 add(2,3);
 ```
@@ -35,11 +39,13 @@ add(2,3);
 还有注释：
 
 *LiveScript:*
+
 ```ls
 # from here to the end of the line.
 ```
 
 *JavaScript:*
+
 ```js
 // from here to the end of the line.
 ```
@@ -53,6 +59,7 @@ add(2,3);
 在LiveScript中定义一个函数是很方便的。
 
 *LiveScript:*
+
 ```ls
 
 (x, y) -> x + y
@@ -66,6 +73,7 @@ times = (x, y) ->
 ```
 
 *JavaScript:*
+
 ```js
 var times;
 (function(x, y){ return x + y; });
@@ -84,6 +92,7 @@ times = function(x, y){
 基本的赋值和你所想的一样，`variable = value`，无需变量的声明。但是不同于CoffeeScript，你必须使用`:=`来修改上一级作用域的值。
 
 *LiveScript:*
+
 ```ls
 x = 10
 
@@ -101,6 +110,7 @@ x #=> 2
 ```
 
 *JavaScript:*
+
 ```js
 var x;
 x = 10;
@@ -120,6 +130,7 @@ x;
 几乎所有东西都是表达式，意味着你可以做这样的事：
 
 *LiveScript:*
+
 ```ls
 x = if 2 + 2 == 4
     then 10
@@ -128,6 +139,7 @@ x #=> 10
 ```
 
 *JavaScript:*
+
 ```js
 var x;
 x = 2 + 2 === 4 ? 10 : 0;
@@ -140,11 +152,13 @@ x;
 如果你想仅仅声明一个变量，而不初始化它，你可以使用`var`.
 
 *LiveScript:*
+
 ```ls
 var x
 ```
 
 *JavaScript:*
+
 ```js
 var x;
 ```
