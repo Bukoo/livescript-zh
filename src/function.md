@@ -191,3 +191,258 @@ g = function(a, b) {
 }
 g(3, 4);
 ```
+
+## 参数
+
+扩展的参数：
+
+``` livescript
+set-person-params = (
+  person # target object to set params
+  person.age
+  person.height
+) -> person
+
+person = set-person-params {}, 21, 180cm
+#=> {age: 21, height: 100}
+```
+
+``` javascript
+var setPersonParams, person;
+setPersonParams = function(person, age, height) {
+  person.age = age;
+  person.height = height;
+  return person;
+};
+person = setPersonParams({}, 21, 180);
+```
+
+和`this`结合在一起的时候，这一点非常有用。
+
+``` livescript
+set-text = (@text) -> this
+```
+
+``` javascript
+var setText;
+setText = function(text) {
+  this.text = text;
+  return this;
+}
+```
+
+你可以设置默认参数：
+
+``` livescript
+add = (x = 4, y = 3) -> x + y
+add 1 2 #=> 3
+add 1   #=> 4
+add!    #=> 7
+```
+
+``` javascript
+var add;
+add = function(x, y) {
+  x == null && (x = 4);
+  y == null && (y = 3);
+  return x + y;
+};
+add(1, 2);
+```
+
+事实上，你可以使用任何逻辑操作符（在参数中，`x = 2` 是 `x ? 2` 的语法糖）：
+
+``` livescript
+add = (x && 4, y || 3) -> x + y
+add 1 2 #=> 6
+add 2 0 #=> 7
+```
+
+``` javascript
+var add;
+add = function(x, y) {
+  x && (x = 4);
+  y || (y = 3); 
+};
+add(1, 2);
+add(2, 0);
+```
+
+你也可以对参数进行解构：
+
+``` livescript
+set-cords = ({x, y}) -> "#x,#y"
+set-cords y: 2, x: 3 #=> '3,2'
+```
+
+``` javascript
+var setCords;
+setCords = function(arg$) {
+  var x, y;
+  x = arg$.x, y = arg$.y;
+  return x + ',' + y;
+};
+setCords({
+  y: 2,
+  x: 3
+});
+```
+
+你甚至可以为被解构的参数设置默认值（或者使用任何逻辑语句），这和Python语言的关键字参数的工作方式是一样的。
+
+``` livescript
+set-cords = ({x = 1, y = 3} = {}) -> "#x,#y"
+set-cords y: 2, x: 3 #=> '3,2'
+set-cords x: 2       #=> '2,3'
+set-cords y: 7       #=> '1,7'
+set-cords!           #=> '1,3'
+```
+
+``` javascript
+var setCords;
+setCords = function(arg$) {
+  var ref$, ref1$, x, y;
+  ref$ = arg$ != null ? arg$ : {}, x = (ref1$ = ref$.x) != null ? ref1$ : 1, y = (ref1$ = ref$.y) != null ? ref1$ : 3;
+  return x + "," + y;
+};
+setCords({
+  y: 2,
+  x: 3
+});
+setCords({
+  x: 2
+});
+setCords({
+  y: 7
+});
+setCords();
+```
+
+你也可以在参数中使用省略提示符：
+
+``` livescript
+f = (x, ...ys) -> x + ys.1
+f 1 2 3 4 # 4
+```
+
+``` javascript
+var f, slice$ = [].slice;
+f = function(x) {
+  var ys;
+  ys = slice$.call(arguments, 1);
+  return x + ys[1];
+}
+f(1, 2, 3, 4);
+```
+
+你也可以在你的参数中使用一元操作符。使用`+` 和 `!!` 操作符能够分别将你的参数转换为数字和布尔值，或者使用克隆操作符`^^`来确保在函数中对对象的改变不会影响到原来的对象。你仍然可以使用扩展的参数，例如. `(!!x.x) ->`。
+
+``` livescript
+f = (!!x) -> x
+f 'truthy string' #=> string
+
+g = (+x) -> x
+g '' #=> 0
+
+obj = {prop: 1}
+h = (^^x) ->
+  x.prop = 99
+  x
+h obj
+obj.prop #=> 1
+```
+
+``` javascript
+var f, g, obj, h;
+f = function(x) {
+  x = !!x;
+  return x;
+};
+
+g = function(x) {
+  x = +x;
+  return x;
+}
+
+obj = { prop: 1};
+h = function() {
+  x = clone$(x);
+  x.prop = 99;
+  return x;
+};
+h(obj);
+obj.prop;
+
+funcion clone$(it) {
+  function fun() {} fun.prototype = it;
+  return new fun;
+}
+```
+
+## 柯里化
+
+柯里化函数的功能非常强大。其本质是，当被调用时提供的参数少于定义时的参数，柯里化函数返回一个部分应用的函数。也就是说，柯里化函数返回参数为未提供部分的函数，并且你提供的参数的值已经被绑定。柯里化函数使用长箭头来定义。或许使用一个例子能够更能够帮助你理解。
+
+``` livescript
+times = (x, y) --> x * y
+times 2, 3       #=> 6 (normal use works as expected)
+double = times 2
+double 5         # 10
+```
+
+``` javascript
+var times, double;
+times = curry$(function(x, y) {
+    return x * y;
+});
+times(2, 3);
+double = times(2);
+double(5);
+function curry$(f, bound) {
+  var context;
+  _curry = function(args) {
+    return f.length > 1 ? function() {
+      var prams = args ? args.concat() : [];
+      contex = bound ? context || this : this;
+      return params.push.apply(params, arguments) < f.length && arguments.length ? _curry.call(context. params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+```
+
+你可以使用长波浪箭头： `~~>`，来定义绑定柯里化函数。
+
+如果你调用一个没有参数的柯里化函数，
+
+``` livescript
+f = (x = 5, y = 10) --> x + y
+f! #=> 15
+g = f 20
+g 7 #=> 27
+g!  #=> 30
+```
+
+``` javascript
+var f, g;
+f = curry$(function(x, y) {
+  x == null && (x = 5);
+  y == null && (y = 10);
+  return x + y;
+});
+f();
+g = f(20);
+g(7);
+g();
+function curry$(f, bound) {
+  var context;
+  _curry = function(args) {
+    return f.length > 1 ? function() {
+      var prams = args ? args.concat() : [];
+      contex = bound ? context || this : this;
+      return params.push.apply(params, arguments) < f.length && arguments.length ? _curry.call(context. params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+```
