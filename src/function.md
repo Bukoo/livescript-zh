@@ -96,7 +96,7 @@ do => 3 + 2 #=> 5
 }}();
 ```
 
-如果你对一个有函数名的函数使用`do`，当`do`不是被用来作为一个表达式，该函数将会首先通过函数声明被声明。
+如果你对一个有函数名的函数使用`do`，当`do`不是被用来作为一个表达式时，该函数将会首先通过函数声明被声明。
 
 ``` livescript
 i = 0
@@ -413,7 +413,7 @@ function curry$(f, bound) {
 
 你可以使用长波浪箭头： `~~>`，来定义绑定柯里化函数。
 
-如果你调用一个没有参数的柯里化函数，
+如果你调用一个没有参数的柯里化函数，它也能够允许你使用默认参数。
 
 ``` livescript
 f = (x = 5, y = 10) --> x + y
@@ -445,4 +445,206 @@ function curry$(f, bound) {
   };
   return _curry();
 }
+```
+
+## 显示命名函数
+
+你能够创建显示命名函数，显示命名函数的定义将会被提升到作用域的顶部——这在将通用函数的定义放在文件结尾而不是顶部的时候非常有用。显示命名的函数是常量，它们不能够被重复定义。
+
+``` livescript
+util!   #=> 'available above declaration'
+until2! #=> 2
+
+function util
+  `avaulable above declaration`
+function util2 then 2
+```
+
+``` javascript
+util();
+util2();
+function util() {
+  return 'available above declaration';
+}
+function util2() {
+  return 2;
+}
+```
+
+你可以在函数定义前面加一个波浪号`~`，使该函数成为一个绑定函数：
+
+``` livescript
+~function add x, y
+  @result = x + y
+```
+
+``` javascript
+var this$ = this;
+function add(x, y) {
+  return this$.result = x + y;
+}
+```
+
+你可以在函数定义前面加一个感叹号`!`来阻止函数返回。
+
+``` livescript
+util! #=> nothing
+!function util x the x
+```
+
+``` javascript
+util();
+function util(x) {
+  x;
+}
+```
+
+当然，如果你想要的话，你也可以结合使用`~` 和 `!`来创建一个绑定的无返回函数。
+
+## 绑定函数
+
+绑定函数可以使用波浪箭头`~>`来定义。使用长波浪箭头能够定义柯里化的绑定函数。在显示命名的函数前面加`~`能够使该函数被绑定。
+
+绑定函数的绑定是词法作用域上的绑定而不是正常的动态绑定。这意味着，`this`的值和绑定函数被调用的上下文无关，`this`的值总是绑定函数被定义时的上下文中`this`的值。
+
+``` livescript
+obj = new
+  @x      = 10
+  @normal = -> @x
+  @bound  = ~> @x
+
+obj2 = x: 5
+obj2.normal = obj.normal
+obj2.bound  = obj.bound
+
+obj2.normar! #=> 5
+obj2.bound!  #=> 10
+```
+
+``` javascript
+var obj, obj2;
+obj = new function() {
+  var this$ = this;
+  this.x = 10;
+  this.normal = function() {
+    return this.x;
+  };
+  this.bound = function() {
+    return this$.x;
+  };
+};
+obj2 = {
+  x: 5
+};
+obj2.normal = obj.normal;
+obj2.bound = obj.bound;
+obj2.normal();
+obj2.bound();
+```
+
+更多绑定函数在类中的使用可以查看[OOP](http://livescript.net/#oop)章节。
+
+## `Let`, `New`
+
+`let`是`(function(a){...}.call(this, b))`的简写。
+
+``` livescript
+let $ = jQuery
+  $.isArray [] #=> true
+```
+
+``` javascript
+(function($) {
+    $.isArray([]);
+}.call(this, jQuery));
+```
+
+你可以使用`let`定义`this`（又名`@`）。
+
+``` livescript
+x = let @ = a: 1, b: 2
+  @b ^ 3
+x #=> 8
+```
+
+``` javascript
+var x;
+x = (function() {
+  return Math.pow(this.b, 3);
+}.call({
+  a: 1,
+  b: 2
+}));
+x;
+```
+
+
+
+``` livescript
+dog = new
+  @name = \spot
+  @mutt = true
+#=> {name: 'spot', mutt: true}
+```
+
+``` javascript
+var dog;
+dog = new function() {]
+  this.name = 'spot';
+  this.mutt = true;
+};
+```
+
+## 访问、调用函数的简写
+
+对于像`map`和`filter`这样的高阶函数，简写是非常有用的。`.porp`是`(it) -> it.prop`的简写。
+
+``` livescript
+map (.length), <[ hello there you ]>
+#=> [5,5,3]
+
+filter (.length < 4), <[ hello there you]>
+#=> ['you']
+```
+
+``` javascript
+map(function(it) {
+  return it.length;
+}, ['hello', 'there', 'you']);
+filter(function(it) {
+  return it.length < 4;
+}, ['hello', 'there', 'you']);
+```
+
+你也可以使用简写来调用对象的方法：
+
+``` livescript
+map (.join `|`) [[1 2 3], [7 8 9]]
+#=> ['1|2|3', '7|8|9']
+```
+
+``` javascript
+map(function(it) {
+  return it.join('|');
+}, [[1, 2, 3], [4, 5, 6]]);
+```
+
+`(obj.)`是`(it) -> obj[it]`的简写。
+
+``` livescript
+obj = one: 1, two: 2, three: 3
+map (obj.), <[ one three ]>
+#=> [1, 3]
+```
+
+``` javascript
+var obj;
+obj = {
+  one: 1,
+  two: 2,
+  three: 3
+};
+map(function(it) {
+  return obj[it];
+}, ['one', 'three']);
 ```
