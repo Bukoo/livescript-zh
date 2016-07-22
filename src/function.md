@@ -648,3 +648,186 @@ map(function(it) {
   return obj[it];
 }, ['one', 'three']);
 ```
+
+## Backcalls
+
+Backcalls是非常有用的。Backcalls允许你能够扁平化你的回调函数。Backcalls通过向左指的箭头来定义。定义backcalls的所有语法和定义绑定函数（`<~`），柯里化函数（`<--`，`<~~`），不返回内容的函数（`<-!`）的箭头是一样的——除了箭头所指的方向是相反的。
+
+``` livescript
+<- $
+alert \boom
+```
+
+``` javascript
+$(function() {
+  return alert('boom');
+});
+```
+
+Backcalls能够使用参数，并且你可以使用`_`占位符来指定你想要让它出现的地方。
+
+``` livescript
+x <- map _, [1 to 3]
+x * 2
+#=> [2, 4, 6]
+```
+
+``` javascript
+map(function(x) {
+  return x * 2;
+}, [1, 2, 3]);
+```
+
+如果你想要你的backcalls后面继续编写代码，你可以使用`do`语句来区分它们。
+
+``` livescript
+do
+  data -> $.get 'ajaxtest'
+  $ '.result' .html data
+  processed <-! $.get 'ajaxprocess', data
+  $ '.result' .append processed
+
+alert 'hi'
+```
+
+``` javascript
+$.get('ajaxtest', function(data) {
+  $('.result').html(data);
+  $.get('ajaxprocess', data, function(processed) {
+    $('.result').append(processed);
+  });
+});
+alert('hi');
+```
+
+## 部分应用
+
+你可以使用下划线`_`作为占位符来定义部分应用函数。有时候，你所调用的函数不是柯里化的，或者如果函数的参数并不是合适的顺序。在这些情况下部分应用函数是非常有用的。
+
+``` livescript
+filter-nums = filter _, [1 to 5]
+filter-nums even  #=> [2,4]
+filter-nums odd   #=> [1,3,5]
+filter-nums (< 3) #=> [1, 2]
+```
+
+``` javascript
+var filterNums, slice$ = [].slice;
+filterNums = partialize$.apply(this, [filter, [void 8, [1, 2, 3, 4, 5]], [0]]);
+filterNums(even);
+filterNums(odd);
+filterNums(function(it) {
+  return it < 3;
+});
+function partialize$(f, args, where) {
+  var context = this;
+  return function() {
+    var params = slice$.call(arguments), i,  len = params.length, wlen = where.length, ta = args ? args.contact() : []. tw = where ? where.concat(): [];
+    for(i = 0; i < len; ++i) { ta[tw[0]] = params[i]; tw.shift(); }
+      return len < wlen && len ? partialize$.apply(context, [f, ta, tw]) : f.apply(context, ta);
+  };
+}
+```
+
+如果你调用一个部分应用函数而不传递参数，它会像允许你使用默认参数那样执行，而不是返回自身。
+
+如果你使用的函数没有良好的参数顺序并且不是柯里化的（例如 underscore.js），部分应用函数在管道式调用上将非常有帮助。
+
+``` livescript
+[1 2 3]
+|> _.map _, (* 2)
+|> _reduce _, (+), 0
+#=> 12
+```
+
+``` javascript
+_.reduce(_.map([1, 2, 3], (function(it) {
+  return it * 2;
+})), curry$(function(x$, y$) {
+  return x$ + y$;
+}), 0);
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+```
+
+## Arguments
+
+如果你只有一个参数，你可以不用定义一个参数而是直接使用`it`来访问。
+
+``` livescript
+f = -> it + 2
+f 3 #=> 5
+```
+
+``` javascript
+var f;
+f = function(it) {
+  return it + 2;
+}
+f(3);
+```
+
+你可以使用简写`&`来访问`arguments`对象。第一个参数用`&0`表示，第二个参数用`&1`表示，以此类推。单独使用`&`表示`arguments`整个对象。
+
+``` livescript
+add-three-numbers = -> &0 + &1 + &2
+add-three-numbers 1 2 3 #=> 6
+```
+
+``` javascript
+var addThreeNumbers;
+addThreeNumbers = function() {
+  return arguments[0] + arguments[1] + arguments[2];
+};
+addThreeNumbers(1, 2, 3);
+```
+
+注意当`add-three-numbers`函数声明的参数数量为0时，柯里化将无法工作。
+
+## 更多
+
+# Generators and Yield
+
+你可以在LiveScript代码中使用生成器和`yield`了！一个简单的例子：
+
+``` livescript
+function* f
+  yield "foo"
+
+g = ->*
+  yield from f!
+  yield "bar"
+
+h = g!
+h.next!.value + h.next!.value #=> "foobar"
+```
+
+``` javascript
+var g, h;
+function* f() {
+  return (yield "foo");
+}
+g = function*() {
+  (yield* f());
+  return (yield "bar");
+}
+h = g();
+h.next().value + h.next().value;
+```
+
+你可以通过在`function`关键字或者在LiveScript的箭头符号后面加`*`来创建生成器。这种方法对于LiveScript的各种箭头符号都是有效的。
+
+`yield`的使用和JavaScript中是一样的，`yield from`和JavaScript中`yield *`是相同的。
+
+使用node 0.11运行使用了生成器和`yield`的代码，需要使用`--harmony`标识。如果直接使用`lsc`来运行，需要使用命令`lsc file.ls --nodejs --harmony`来将harmony标识传递给node。
