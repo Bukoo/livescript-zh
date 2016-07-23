@@ -6,12 +6,12 @@
 (x, y) -> x + y
 
 
--> # an empty function
+-> # 一个空函数
 
 times = (x, y) ->
     x * y
-# multiple lines, and be assigned to
-# a var like in JavaScript
+# 多行函数，并且像JavaScript一样，
+# 函数被赋值给一个var声明的变量
 ```
 
 ``` javascript
@@ -198,7 +198,7 @@ g(3, 4);
 
 ``` livescript
 set-person-params = (
-  person # target object to set params
+  person # 设置参数的目标对象
   person.age
   person.height
 ) -> person
@@ -385,7 +385,7 @@ funcion clone$(it) {
 
 ``` livescript
 times = (x, y) --> x * y
-times 2, 3       #=> 6 (normal use works as expected)
+times 2, 3       #=> 6 （和期望中一样正常工作）
 double = times 2
 double 5         # 10
 ```
@@ -452,7 +452,7 @@ function curry$(f, bound) {
 你能够创建显示命名函数，显示命名函数的定义将会被提升到作用域的顶部——这在将通用函数的定义放在文件结尾而不是顶部的时候非常有用。显示命名的函数是常量，它们不能够被重复定义。
 
 ``` livescript
-util!   #=> 'available above declaration'
+util!   #=> '函数在声明前就能够被调用'
 until2! #=> 2
 
 function util
@@ -578,7 +578,7 @@ x = (function() {
 x;
 ```
 
-
+使用new绑定上下文：
 
 ``` livescript
 dog = new
