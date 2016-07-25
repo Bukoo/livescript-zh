@@ -18,7 +18,7 @@
 * [赋值](assignment.md)
 * [获取属性](property_access.md)
 * [异常处理](exception.md)
-* [面向对象编程](object_orient_programming.md)
+* [面向对象编程](object_oriented_programming.md)
 * [CoffeeScript到LiveScript转译指南](coffeescript_to_livescript_convertion_guide.md)
 * [LiveScript变更日志](changelog.md)
 * [LiveScript的灵感来源](inspiration.md)
