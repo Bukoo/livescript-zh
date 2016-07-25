@@ -1,5 +1,6 @@
 # 面向对象编程
 
+---
 类是一种语法糖，本意为构造函数的定义及其原型的设置而设计。
 构造函数被定义为函数文本，处于类定义的最高层。
 其原型的属性也在最高层由对象文本来定义。
@@ -18,6 +19,7 @@ a.x        #=> 3
 a.property #=> 1
 a.method 6 #=> 10
 ```
+
 *JavaScript*
 ```js
 var A, a;
@@ -38,4 +40,70 @@ a.x;
 a.property;
 a.method(6);
 ```
+
+---
 静态属性（构造函数拥有的属性）以在最高层给```this```添加属性的方式来定义。这些属性可通过获取构造函数来获取（简写为```@@```）。
+
+*LiveScript*
+```ls
+class A
+  @static-prop = 10
+  get-static: ->
+    @@static-prop + 2
+
+A.static-prop #=> 10
+a = new A
+a.get-static! #=> 12
+```
+
+*JavaScript*
+```js
+var A, a;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  A.staticProp = 10;
+  prototype.getStatic = function(){
+    return constructor.staticProp + 2;
+  };
+  function A(){}
+  return A;
+}());
+A.staticProp;
+a = new A;
+a.getStatic();
+```
+
+---
+私有静态属性仅在函数体中作为常规变量存在。（注：JavaScript并没有实现私有实例属性，这正是LiveScript的一大亮点。）
+
+*LiveScript*
+```ls
+class A
+  secret = 10
+
+  get-secret: ->
+    secret
+
+a = new A
+a.get-secret! #=> 10
+```
+
+*JavaScript*
+```js
+var A, a;
+A = (function(){
+  A.displayName = 'A';
+  var secret, prototype = A.prototype, constructor = A;
+  secret = 10;
+  prototype.getSecret = function(){
+    return secret;
+  };
+  function A(){}
+  return A;
+}());
+a = new A;
+a.getSecret();
+```
+
+
