@@ -106,4 +106,58 @@ a = new A;
 a.getSecret();
 ```
 
+---
+你可以定义绑定方法（使用```~>```，它将指向函数本体的```this```绑定到实例上。）
 
+*LiveScript*
+```ls
+class A
+  x: 10
+  bound-func: (x) ~>
+    @x
+  reg-func: (x) ->
+    @x
+
+a = new A
+obj =
+  x: 1
+  bound: a.bound-func
+  reg: a.reg-func
+
+obj.bound! #=> 10
+obj.reg!   #=> 1
+```
+
+*JavaScript*
+```js
+var A, a, obj;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  prototype.x = 10;
+  prototype.boundFunc = function(x){
+    return this.x;
+  };
+  prototype.regFunc = function(x){
+    return this.x;
+  };
+  function A(){
+    this.boundFunc = bind$(this, 'boundFunc', prototype);
+  }
+  return A;
+}());
+a = new A;
+obj = {
+  x: 1,
+  bound: a.boundFunc,
+  reg: a.regFunc
+};
+obj.bound();
+obj.reg();
+function bind$(obj, key, target){
+  return function(){ return (target || obj)[key].apply(obj, arguments) };
+}
+```
+
+---
+使用对象设置参数的语法糖，可以让你方便在构造函数与方法中设置属性。
