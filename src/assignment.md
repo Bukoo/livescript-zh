@@ -278,7 +278,6 @@ mitch =
   height: 180cm
   pets:    [\dog, \goldfish]
 
-
 phile = {}
 phile{height, pets} = mitch
 phile.height #=> 180
