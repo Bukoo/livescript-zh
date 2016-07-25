@@ -227,4 +227,84 @@ a.x;
 ```
 
 ---
-对于更高等级的库和框架，可以将构造函数定义为constructor
+对于更高等级的库和框架，可以定义构造函数为```（待定）```，将其作为外置函数。但这种做法不建议运用在常规开发中。
+
+*LiveScript*
+```ls
+f = (@x) ->
+
+class A
+  constructor$$: f
+
+a = new A 5
+a.x #=> 5
+```
+
+*JavaScript*
+```js
+待定
+```
+
+---
+使用```extends```关键字来实现继承。
+
+*LiveScript*
+```ls
+class A
+  ->
+    @x = 1
+  @static-prop = 8
+  method: ->
+    @x + 2
+
+class B extends A
+  ->
+    @x = 10
+
+B.static-prop #=> 8
+b = new B
+b.x       #=> 10
+b.method! #=> 12
+```
+
+*JavaScript*
+```js
+var A, B, b;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  function A(){
+    this.x = 1;
+  }
+  A.staticProp = 8;
+  prototype.method = function(){
+    return this.x + 2;
+  };
+  return A;
+}());
+B = (function(superclass){
+  var prototype = extend$((import$(B, superclass).displayName = 'B', B), superclass).prototype, constructor = B;
+  function B(){
+    this.x = 10;
+  }
+  return B;
+}(A));
+B.staticProp;
+b = new B;
+b.x;
+b.method();
+function extend$(sub, sup){
+  function fun(){} fun.prototype = (sub.superclass = sup).prototype;
+  (sub.prototype = new fun).constructor = sub;
+  if (typeof sup.extended == 'function') sup.extended(sub);
+  return sub;
+}
+function import$(obj, src){
+  var own = {}.hasOwnProperty;
+  for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+  return obj;
+}
+```
+
+---
+```super```使继承来的格外方便。对于裸函数，```super```将是该函数可能存在的父函数的引用。如果你想以完整的参数列表来调用父函数，你可以使用```super ...```的语法。
