@@ -308,3 +308,212 @@ function import$(obj, src){
 
 ---
 ```super```使继承来的格外方便。对于裸函数，```super```将是该函数可能存在的父函数的引用。如果你想以完整的参数列表来调用父函数，你可以使用```super ...```的语法。
+
+*LiveScript*
+```ls
+class A
+  ->
+    @x = 1
+  method: (num) ->
+    @x + num
+
+class B extends A
+  ->
+    @y = 2
+    super!
+
+  method: (num) ->
+    @y + super ...
+
+b = new B
+b.y #=> 2
+b.method 10 #=> 13
+```
+
+*JavaScript*
+```js
+var A, B, b;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  function A(){
+    this.x = 1;
+  }
+  prototype.method = function(num){
+    return this.x + num;
+  };
+  return A;
+}());
+B = (function(superclass){
+  var prototype = extend$((import$(B, superclass).displayName = 'B', B), superclass).prototype, constructor = B;
+  function B(){
+    this.y = 2;
+    B.superclass.call(this);
+  }
+  prototype.method = function(num){
+    return this.y + superclass.prototype.method.apply(this, arguments);
+  };
+  return B;
+}(A));
+b = new B;
+b.y;
+b.method(10);
+function extend$(sub, sup){
+  function fun(){} fun.prototype = (sub.superclass = sup).prototype;
+  (sub.prototype = new fun).constructor = sub;
+  if (typeof sup.extended == 'function') sup.extended(sub);
+  return sub;
+}
+function import$(obj, src){
+  var own = {}.hasOwnProperty;
+  for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+  return obj;
+}
+```
+
+---
+通过```implements```你可以使用mixins。一次只能继承一个类，但能mixin任何你想要的对象。如果你需要扩展一个类，而不是一个简单的对象，必须扩展类的原型。
+
+*LiveScript*
+```ls
+Renameable =
+  set-name: (@name) ->
+  get-name: -> @name ? @id
+
+class A implements Renameable
+  ->
+    @id = Math.random! * 1000
+
+a = new A
+a.get-name! #=> some random number
+a.set-name 'moo'
+a.get-name! #=> 'moo'
+```
+
+*JavaScript*
+```js
+var Renameable, A, a;
+Renameable = {
+  setName: function(name){
+    this.name = name;
+  },
+  getName: function(){
+    var ref$;
+    return (ref$ = this.name) != null
+      ? ref$
+      : this.id;
+  }
+};
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  importAll$(prototype, arguments[0]);
+  function A(){
+    this.id = Math.random() * 1000;
+  }
+  return A;
+}(Renameable));
+a = new A;
+a.getName();
+a.setName('moo');
+a.getName();
+function importAll$(obj, src){
+  for (var key in src) obj[key] = src[key];
+  return obj;
+}
+```
+
+---
+要修改原型可以使用```::```操作符，如果要修改多个属性的话可以使用```::=```操作符。
+
+*LiveScript*
+```ls
+class A
+  prop: 10
+  f: ->
+    @prop
+
+a = new A
+b = new A
+a.f! #=> 10
+
+A::prop = 6
+a.f! #=> 6
+b.f! #=> 6
+
+A ::=
+  prop: 5
+  f: ->
+    @prop + 4
+a.f! #=> 9
+b.f! #=> 9
+```
+
+*JavaScript*
+```js
+var A, a, b, ref$;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  prototype.prop = 10;
+  prototype.f = function(){
+    return this.prop;
+  };
+  function A(){}
+  return A;
+}());
+a = new A;
+b = new A;
+a.f();
+A.prototype.prop = 6;
+a.f();
+b.f();
+ref$ = A.prototype;
+ref$.prop = 5;
+ref$.f = function(){
+  return this.prop + 4;
+};
+a.f();
+b.f();
+```
+
+---
+如果你不想继续支持之前的浏览器版本，而期望使用```Object.defineProperty```，可以使用一下的简写：
+
+*LiveScript*
+```ls
+class Box
+  dimensions:~
+    -> @d
+    ([width, height]) -> @d = "#{width}x#height"
+
+b = new Box
+b.dimensions = [10 5]
+b.dimensions #=> '10x5'
+```
+
+*Javascript*
+```js
+var Box, b;
+Box = (function(){
+  Box.displayName = 'Box';
+  var prototype = Box.prototype, constructor = Box;
+  Object.defineProperty(prototype, 'dimensions', {
+    get: function(){
+      return this.d;
+    },
+    set: function(arg$){
+      var width, height;
+      width = arg$[0], height = arg$[1];
+      this.d = width + "x" + height;
+    },
+    configurable: true,
+    enumerable: true
+  });
+  function Box(){}
+  return Box;
+}());
+b = new Box;
+b.dimensions = [10, 5];
+b.dimensions;
+```
