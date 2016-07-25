@@ -1,5 +1,6 @@
 # Summary
 
+* [Introduction](README.md)
 * [概述](src/overview.md)
 * [安装](src/installation.md)
 * [使用](src/usage.md)
@@ -16,7 +17,7 @@
 * [循环结构](src/loop_comprehension.md)
 * [选择结构](src/switch.md)
 * [赋值](src/assignment.md)
-* [获取属性](src/property_access.md)
+* [属性访问](src/property_access.md)
 * [异常处理](src/exception.md)
 * [面向对象编程](src/object_orient_programming.md)
 * [CoffeeScript到LiveScript转译指南](src/coffeescript_to_livescript_convertion_guide.md)
@@ -25,3 +26,4 @@
 * [名字的由来](src/name.md)
 * [鸣谢](src/thanks.md)
 * [如何为LiveScript贡献代码](src/contributing_guide.md)
+
