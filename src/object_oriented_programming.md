@@ -478,7 +478,7 @@ b.f();
 ```
 
 ---
-如果你不想继续支持之前的浏览器版本，而期望使用```Object.defineProperty```，可以使用一下的简写：
+如果你不想继续支持之前的浏览器版本，而期望使用```Object.defineProperty```，可以使用以下的简写：
 
 *LiveScript*
 ```ls
