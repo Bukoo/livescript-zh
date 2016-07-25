@@ -161,3 +161,70 @@ function bind$(obj, key, target){
 
 ---
 使用对象设置参数的语法糖，可以让你方便在构造函数与方法中设置属性。
+
+*LiveScript*
+```ls
+class A
+  (@x) ->
+
+  f: (@y) ->
+    @x + @y
+
+a = new A 2
+a.x   #=> 2
+a.f 3 #=> 5
+a.y   #=> 3
+```
+
+*JavaScript*
+```js
+var A, a;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  function A(x){
+    this.x = x;
+  }
+  prototype.f = function(y){
+    this.y = y;
+    return this.x + this.y;
+  };
+  return A;
+}());
+a = new A(2);
+a.x;
+a.f(3);
+a.y;
+```
+
+---
+如果你将构造函数定义为绑定函数```~>```，在创建新实例的时候，可以免去使用```new```关键字的麻烦。
+
+*LiveScript*
+```ls
+class A
+  (@x) ~>
+
+a = A 4
+a.x #=> 4
+```
+
+*JavaScript*
+```js
+var A, a;
+A = (function(){
+  A.displayName = 'A';
+  var prototype = A.prototype, constructor = A;
+  function A(x){
+    var this$ = this instanceof ctor$ ? this : new ctor$;
+    this$.x = x;
+    return this$;
+  } function ctor$(){} ctor$.prototype = prototype;
+  return A;
+}());
+a = A(4);
+a.x;
+```
+
+---
+对于更高等级的库和框架，可以将构造函数定义为constructor
