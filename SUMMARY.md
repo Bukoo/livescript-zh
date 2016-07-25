@@ -1,6 +1,6 @@
 # Summary
 
-* [Introduction](README.md)
+* [关于这本翻译书](README.md)
 * [概述](src/overview.md)
 * [安装](src/installation.md)
 * [使用](src/usage.md)
@@ -19,7 +19,7 @@
 * [赋值](src/assignment.md)
 * [属性访问](src/property_access.md)
 * [异常处理](src/exception.md)
-* [面向对象编程](src/object_orient_programming.md)
+* [面向对象编程](src/object_oriented_programming.md)
 * [CoffeeScript到LiveScript转译指南](src/coffeescript_to_livescript_convertion_guide.md)
 * [LiveScript变更日志](src/changelog.md)
 * [LiveScript的灵感来源](src/inspiration.md)
