@@ -1,6 +1,6 @@
 # 选择结构
 
-`break`将会被自动插入。多个case的条件是被允许的。
+`break`将会被自动插入到每个`case`的末尾。你可以一个`case`里使用多个条件。
 
 *Livescript:*
 
@@ -61,7 +61,7 @@ case 6 / 2 !== 3:
 }
 ```
 
-你可以使用`fallthrough`来阻止自动插入`break`。它必须是`case`块的最后一条表达式。同时，你可以把`switch`语句当做表达式使用。
+你可以使用`fallthrough`来阻止`break`的自动插入。`fallthrough`必须是`case`块的最后一条表达式。另外，你可以把`switch`语句当做表达式使用。
 
 *Livescript:*
 
@@ -125,7 +125,7 @@ default:
 }
 ```
 
-你可以在`switch`语句里使用`that`：
+你可以在`switch`语句里使用`that`（这里的`that`就是`switch`后面的表达式的值）：
 
 *Livescript:*
 
@@ -148,7 +148,7 @@ default:
 }
 ```
 
-如果在箭头（*例如`->`*）、`:`、`=`后是`case`，将会隐式地添加一个`switch`。
+如果在箭头（*例如`->`*）、`:`、`=`后是`case`(或者它的别名`|`)，编译时将会隐式地添加一个`switch`。
 
 *Livescript:*
 
