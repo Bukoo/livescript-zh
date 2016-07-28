@@ -230,7 +230,7 @@ var ref$;
 (ref$ = 9 - 5) < 6 ? ref$ : 6;
 ```
 
-当相等类符号(*`==`或`is`和它们的取非)的一个操作符是正则表达式字面量时，它会测试测试另外一个操作对象，相等操作符被编译成`exec`，所以你可以使用它的结果，但是不相等操作符会被编译成`test`。
+当相等类符号(*`==`或`is`和它们的取非)的一个操作符是正则表达式字面量时，它会测试另外一个操作对象，相等操作符被编译成`exec`，所以你可以使用它的结果，但是不相等操作符会被编译成`test`。
 
 *LiveScript:*
 
@@ -298,7 +298,7 @@ false xor false #=> false
 ((1, 1) || 1) && !(1 && 1) && (1 || 1);
 ```
 
-`and`，`or`和`xor`会隐式地分割开函数调用，但`||`和`&&`不会
+`and`，`or`和`xor`比函数调用的优先级低，而`||`和`&&`比函数调用优先级高
 
 *LiveScript:*
 
@@ -332,7 +332,7 @@ f(3, 4) && g(3, 4) || h(3, 4);
 
 ## In/Of
 
-使用`in`来检查一个元素是否在列表中；使用`of`来检查一个键是否在一个对象中
+使用`in`来检查一个元素是否在列表中；使用`of`来检查一个键是否在一个对象中。
 
 *LiveScript:*
 
@@ -385,7 +385,7 @@ reverse(
 y = reverse([1, 2, 3]);
 ```
 
-你可以用换行来让代码变得更好看
+你可以用换行来让代码变得更好看。
 
 *LiveScript:*
 
@@ -429,7 +429,7 @@ odd(3);
 function not$(x){ return !x; }
 ```
 
-下面例子更清晰地区分这了两个操作符
+下面例子更清晰地区分这了两个操作符。
 
 *LiveScript:*
 
@@ -462,7 +462,7 @@ timesTwoAddTwo = function(){
 addTwoTimesTwo(3);
 timesTwoAddTwo(3);
 ```
-你可以用空格和点来代替`<<`，例如：`f . g` 就像Haskell一样
+你可以用空格和点来代替`<<`，例如：`f . g` 就像Haskell一样。
 
 ## 列表
 
@@ -483,7 +483,7 @@ timesTwoAddTwo(3);
 
 要注意的是，连接操作符的左右两边要么都有空格`xs ++ ys`，要么都没空格`xs++ys`。如果只有一边有空格，那么它会被看成是自增操作符。
 
-当乘以符号`*`的左边是列表字面量时，可以当做是列表重复的简写
+当乘以符号`*`的左边是列表字面量时，可以当做是列表重复的简写。
 
 *LiveScript:*
 
@@ -497,7 +497,7 @@ timesTwoAddTwo(3);
 ['ha', 'ha', 'ha'];
 ```
 
-当乘以符号`*`的右边是字符串字面量时，可以当做是join方法的简写
+当乘以符号`*`的右边是字符串字面量时，可以当做是join方法的简写。
 
 *LiveScript:*
 
@@ -511,7 +511,7 @@ timesTwoAddTwo(3);
 ['one', 'two', 'three'].join('|');
 ```
 
-单目操作符会展开，如果它的操作数是列表字面量时，单目操作符会应用到每一项
+单目操作符会展开，如果它的操作数是列表字面量时，单目操作符会应用到每一项。
 
 *LiveScript:*
 
@@ -550,7 +550,7 @@ function clone$(it){
 
 *LiveScript:*
 
-字符串连接
+字符串连接。
 
 ```ls
 'hello' + ' ' + 'world' #=> 'hello world'
@@ -567,7 +567,7 @@ string = 'say ';
 string += 'yeah';
 ```
 
-当乘以符号`*`的左边是字符串字面量时，可以当做是字符串重复的简写
+当乘以符号`*`的左边是字符串字面量时，可以当做是字符串重复的简写。
 
 *LiveScript:*
 
@@ -581,7 +581,7 @@ string += 'yeah';
 'XXX';
 ```
 
-字符串的 减操作/除以操作 当右边的操作数是字符串或者是正则表达式字面量时，减操作表示`replace`，除以操作表示`split`
+字符串的 减操作/除以操作 当右边的操作数是字符串或者是正则表达式字面量时，减操作表示`replace`，除以操作表示`split`。
 
 *LiveScript:*
 
@@ -599,7 +599,7 @@ string += 'yeah';
 
 ## 存在性
 
-问号操作符`?`可以用于很多查询存在性的场景
+问号操作符`?`可以用于很多查询存在性的场景。
 
 *LiveScript:*
 
@@ -624,7 +624,7 @@ if (typeof document != 'undefined' && document !== null) {
 
 ## 对象
 
-Instanceof - 当右边的操作数是列表字面量的时候回展开
+Instanceof - 当右边的操作数是列表字面量的时候回展开。
 
 *LiveScript:*
 
@@ -641,7 +641,7 @@ new Date() instanceof Date;
 (ref$ = new Date()) instanceof Date || ref$ instanceof Object;
 ```
 
-Typeof - 增加一个感叹号会是有用的选择
+Typeof - 增加一个感叹号会是有用的选择。
 
 *LiveScript:*
 
@@ -658,7 +658,7 @@ typeof /^/;
 toString$.call(/^/).slice(8, -1);
 ```
 
-`delete`操作符会返回被删除的对象
+`delete`操作符会返回被删除的对象。
 
 *LiveScript:*
 
@@ -680,7 +680,7 @@ r = (ref$ = obj.one, delete obj.one, ref$);
 r;
 ```
 
-`delete!`就像`delete`在JavaScript一样，返回false仅当属性不存在和不能被delete，否则返回true
+`delete!`就像`delete`在JavaScript一样，返回false仅当属性不存在和不能被delete，否则返回true。
 
 *LiveScript:*
 
@@ -702,7 +702,7 @@ delete obj.one;
 delete Math.PI;
 ```
 
-属性拷贝 - 拷贝会遍历右边操作数的属性到左边的操作数中。`<<<`是作用于独有的属性(*own property*)，`<<<<`作用于所有属性。`import`和`import all`是上面操作符的别名函数，除了有一点不同：如果省略了左边的操作数，那么`this`将会是默认值
+属性拷贝 - 拷贝会遍历右边操作数的属性到左边的操作数中。`<<<`是作用于独有的属性(*own property*)，`<<<<`作用于所有属性。`import`和`import all`是上面操作符的别名函数，除了有一点不同：如果省略了左边的操作数，那么`this`将会是默认值。
 
 *LiveScript:*
 
@@ -801,7 +801,7 @@ function clone$(it){
 
 ## 部分应用，操作符作为函数
 
-你可以部分应用操作符和把他们用作一个函数
+你可以部分应用操作符和把他们用作一个函数。
 
 *LiveScript:*
 
@@ -845,7 +845,7 @@ function not$(x){ return !x; }
 
 ## 导出
 
-通过操作符`export`替代`exports`，你可以有更加清晰的方式定义模块
+通过操作符`export`替代`exports`，你可以有更加清晰的方式定义模块。
 
 *LiveScript:*
 
@@ -898,7 +898,7 @@ out$.MyClass = MyClass = (function(){
 ## 导入
 
 导入一系列的模块会通常会造成不优雅的代码，可以使用`require!`来避免，操作数可以为字符串、数组、对象字面量。
-如需导入带有横杆`-`的模块，则必须使用字符串字面量。
+如需导入带有短横线`-`的模块，则必须使用字符串字面量。
 你可以通过对象字面量来重命名导入的模块。
 你可以解构获得的对象。
 
@@ -948,7 +948,7 @@ path = require('path');
 foo = require('lib');
 ```
 
-你可以通过解构来获取模块的部分
+你可以通过解构来获取模块的部分。
 
 *LiveScript:*
 
@@ -969,7 +969,7 @@ ref$ = require('prelude-ls'), map = ref$.map, id = ref$.id;
 p = require('path'), join = p.join, resolve = p.resolve;
 ```
 
-文件名会自动解析出
+文件名会自动解析出。
 
 *LiveScript:*
 
