@@ -473,19 +473,21 @@ double 5         # 10
 
 ``` javascript
 var times, double;
-times = curry$(function(x, y) {
-    return x * y;
+times = curry$(function(x, y){
+  return x * y;
 });
 times(2, 3);
 double = times(2);
 double(5);
-function curry$(f, bound) {
-  var context;
+function curry$(f, bound){
+  var context,
   _curry = function(args) {
-    return f.length > 1 ? function() {
-      var prams = args ? args.concat() : [];
-      contex = bound ? context || this : this;
-      return params.push.apply(params, arguments) < f.length && arguments.length ? _curry.call(context. params) : f.apply(context, params);
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
     } : f;
   };
   return _curry();
@@ -510,7 +512,7 @@ g!  #=> 30
 
 ``` javascript
 var f, g;
-f = curry$(function(x, y) {
+f = curry$(function(x, y){
   x == null && (x = 5);
   y == null && (y = 10);
   return x + y;
@@ -519,22 +521,24 @@ f();
 g = f(20);
 g(7);
 g();
-function curry$(f, bound) {
-  var context;
+function curry$(f, bound){
+  var context,
   _curry = function(args) {
-    return f.length > 1 ? function() {
-      var prams = args ? args.concat() : [];
-      contex = bound ? context || this : this;
-      return params.push.apply(params, arguments) < f.length && arguments.length ? _curry.call(context. params) : f.apply(context, params);
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
     } : f;
   };
   return _curry();
 }
 ```
 
-## 显示命名函数
+## 显式命名函数
 
-你能够创建显示命名函数，显示命名函数的定义将会被提升到作用域的顶部——这在将通用函数的定义放在文件结尾而不是顶部的时候非常有用。显示命名的函数是常量，它们不能够被重复定义。
+你能够创建显式命名函数，显式命名函数的定义将会被提升到作用域的顶部——这在将通用函数的定义放在文件结尾而不是顶部的时候非常有用。显式命名的函数是常量，它们不能够被重复定义。
 
 *LiveScirpt:*
 
@@ -600,7 +604,7 @@ function util(x) {
 
 ## 绑定函数
 
-绑定函数可以使用波浪箭头`~>`来定义。使用长波浪箭头能够定义柯里化的绑定函数。在显示命名的函数前面加`~`能够使该函数被绑定。
+绑定函数可以使用波浪箭头`~>`来定义。使用长波浪箭头能够定义柯里化的绑定函数。在显式命名的函数前面加`~`能够使该函数被绑定。
 
 绑定函数的绑定是词法作用域上的绑定而不是正常的动态绑定。这意味着，`this`的值和绑定函数被调用的上下文无关，`this`的值总是绑定函数被定义时的上下文中`this`的值。
 
@@ -643,7 +647,7 @@ obj2.normal();
 obj2.bound();
 ```
 
-更多绑定函数在类中的使用可以查看[OOP](http://livescript.net/#oop)章节。
+更多绑定函数在类中的使用可以查看[OOP](https://bukoo1.gitbooks.io/livescript-zh/content/src/object_oriented_programming.html)章节。
 
 ## `Let`, `New`
 
@@ -828,9 +832,9 @@ alert 'hi'
 *JavaScript:*
 
 ``` javascript
-$.get('ajaxtest', function(data) {
+$.get('ajaxtest', function(data){
   $('.result').html(data);
-  $.get('ajaxprocess', data, function(processed) {
+  $.get('ajaxprocess', data, function(processed){
     $('.result').append(processed);
   });
 });
@@ -857,15 +861,18 @@ var filterNums, slice$ = [].slice;
 filterNums = partialize$.apply(this, [filter, [void 8, [1, 2, 3, 4, 5]], [0]]);
 filterNums(even);
 filterNums(odd);
-filterNums(function(it) {
+filterNums((function(it){
   return it < 3;
-});
-function partialize$(f, args, where) {
+}));
+function partialize$(f, args, where){
   var context = this;
-  return function() {
-    var params = slice$.call(arguments), i,  len = params.length, wlen = where.length, ta = args ? args.contact() : []. tw = where ? where.concat(): [];
+  return function(){
+    var params = slice$.call(arguments), i,
+        len = params.length, wlen = where.length,
+        ta = args ? args.concat() : [], tw = where ? where.concat() : [];
     for(i = 0; i < len; ++i) { ta[tw[0]] = params[i]; tw.shift(); }
-      return len < wlen && len ? partialize$.apply(context, [f, ta, tw]) : f.apply(context, ta);
+    return len < wlen && len ?
+      partialize$.apply(context, [f, ta, tw]) : f.apply(context, ta);
   };
 }
 ```
@@ -886,9 +893,9 @@ function partialize$(f, args, where) {
 *JavaScript:*
 
 ``` javascript
-_.reduce(_.map([1, 2, 3], (function(it) {
+_.reduce(_.map([1, 2, 3], (function(it){
   return it * 2;
-})), curry$(function(x$, y$) {
+})), curry$(function(x$, y$){
   return x$ + y$;
 }), 0);
 function curry$(f, bound){
@@ -940,12 +947,10 @@ add-three-numbers 1 2 3 #=> 6
 
 ``` javascript
 var addThreeNumbers;
-addThreeNumbers = function() {
+addThreeNumbers = function(){
   return arguments[0] + arguments[1] + arguments[2];
 };
 addThreeNumbers(1, 2, 3);
 ```
 
 注意当`add-three-numbers`函数声明的参数数量为0时，柯里化将无法工作。
-
-## 更多

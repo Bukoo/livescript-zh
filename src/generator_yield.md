@@ -4,11 +4,11 @@
 
 ``` livescript
 function* f
-  yield "foo"
+    yield "foo"
 
 g = ->*
-  yield from f!
-  yield "bar"
+    yield from f!
+    yield "bar"
 
 h = g!
 h.next!.value + h.next!.value #=> "foobar"
@@ -16,13 +16,13 @@ h.next!.value + h.next!.value #=> "foobar"
 
 ``` javascript
 var g, h;
-function* f() {
+function* f(){
   return (yield "foo");
 }
-g = function*() {
+g = function*(){
   (yield* f());
   return (yield "bar");
-}
+};
 h = g();
 h.next().value + h.next().value;
 ```
